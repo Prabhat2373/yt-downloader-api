@@ -1,0 +1,21 @@
+{
+  "name": "yt-downloader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@headlessui/react": "^1.7.18",
+    "cors": "^2.8.5",
+    "express": "^4.18.3",
+    "nodemon": "^3.1.0",
+    "uuid": "^9.0.1",
+    "ytdl-core": "^4.11.5"
+  }
+}
