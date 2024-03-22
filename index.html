@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="hitAPi()">
+        Hit API 
+    </button>
+    <script>
+        const hitAPi = ()=>{
+            // fetch('http://localhost:8000/test',{
+            //     method:'POST'
+            // })
+
+            fetch('http://localhost:8000/test', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ link: 'https://youtu.be/WO2b03Zdu4Q?si=yKD8uGSRtAoMraLL' }) // Adjust link as needed
+})
+.then(response => {
+  // Check if the request was successful
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  // Extract filename from Content-Disposition header
+//   const filename = response.headers.get('Content-Disposition').split('filename=')[1];
+  const filename = 'video'
+  // Start the download using Blob
+  response.blob().then(blob => {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  });
+})
+.catch(error => console.error('Error:', error));
+
+        }
+    </script>
+</body>
+</html>
