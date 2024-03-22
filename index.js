@@ -151,6 +151,12 @@ app.post('/info', async (req, res) => {
     }
 });
 
+app.get('/',(req,res)=>{
+  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
+  res.end(`<p>Hello! Go to item: <a href="${path}">${path}</a></p>`);
+})
+
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
