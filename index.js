@@ -102,11 +102,13 @@ app.post('/download', async (req, res) => {
         return res.status(400).json({ error: 'Invalid YouTube URL' });
     }
 
-    try {
+    // try {
         const info = await ytdl.getInfo(url);
-        console.log('info', info.formats);
+        console.log('info', info);
 
         const quality = resolution;
+
+        console.log('ytdl', ytdl)
 
         // Find the format with the requested resolution
         const format = ytdl.chooseFormat(info.formats, { quality });
@@ -122,10 +124,10 @@ app.post('/download', async (req, res) => {
             res
         );
 
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Failed to download video' });
-    }
+    // } catch (error) {
+    //     console.error('Error:', error);
+    //     res.status(500).json({ error: 'Failed to download video' });
+    // }
 });
 
 app.post('/info', async (req, res) => {
