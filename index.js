@@ -149,8 +149,8 @@ app.post('/info', async (req, res) => {
 
         res.json({ audio_formats, video_formats,meta });
     } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Failed to fetch video information' });
+        console.error('Error:', error, "Message", error?.message);
+        res.status(500).json({ error: `Failed to fetch video information ${error?.message}` });
     }
 });
 
@@ -163,6 +163,8 @@ app.post('/info', async (req, res) => {
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+    console.log('Node.js version:', process.version);
+
 });
 
 
