@@ -1,8 +1,39 @@
-version: 0.1
-endpoints:
-- name: Employee API
-  port: 8080
-  type: REST
-  networkVisibility: Public
-  context: /
-  schemaFilePath: openapi.yaml
+- path: /download
+  method: POST
+  description: Download a YouTube video
+  request:
+    body:
+      url: string
+      resolution: string
+  response:
+    200:
+      body: application/octet-stream
+    400:
+      body:
+        error: string
+    500:
+      body:
+        error: string
+
+- path: /info
+  method: POST
+  description: Get information about a YouTube video
+  request:
+    body:
+      url: string
+  response:
+    200:
+      body:
+        audio_formats: array
+        video_formats: array
+        meta:
+          title: string
+          author: string
+          keywords: array
+
+    400:
+      body:
+        error: string
+    500:
+      body:
+        error: string
