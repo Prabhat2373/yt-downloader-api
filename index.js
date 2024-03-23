@@ -136,6 +136,7 @@ app.post('/info', async (req, res) => {
 
     try {
         const info = await ytdl.getInfo(url);
+        console.log('infoo',info);
         const formatsWithAudio = info.formats.filter(format => format.hasAudio && format.hasVideo);
 
         const selectedFormat = formatsWithAudio.find(format => format.resolution === '2160p' || format.resolution === '4320p');
@@ -144,18 +145,20 @@ app.post('/info', async (req, res) => {
         const audio_formats = ytdl.filterFormats(info.formats, 'audioonly');
         const video_formats = ytdl.filterFormats(info.formats, 'video');
 
-        res.json({ audio_formats, video_formats });
+        const meta = info.videoDetails
+
+        res.json({ audio_formats, video_formats,meta });
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Failed to fetch video information' });
     }
 });
 
-app.get('/',(req,res)=>{
-  res.setHeader('Content-Type', 'text/html');
-  res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
-  res.end(`<p>Hello! Go to item: <a href="${path}">${path}</a></p>`);
-})
+// app.get('/',(req,res)=>{
+//   res.setHeader('Content-Type', 'text/html');
+//   res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
+//   res.end(`<p>Hello! Go to item: <a href="${path}">${path}</a></p>`);
+// })
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
