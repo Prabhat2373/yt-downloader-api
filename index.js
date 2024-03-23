@@ -136,7 +136,7 @@ app.post('/info', async (req, res) => {
         return res.status(400).json({ error: 'Invalid YouTube URL' });
     }
 
-    // try {
+    try {
         const info = await ytdl.getInfo(url);
         console.log('infoo',info);
         const formatsWithAudio = info.formats.filter(format => format.hasAudio && format.hasVideo);
@@ -150,10 +150,10 @@ app.post('/info', async (req, res) => {
         const meta = info.videoDetails
 
         res.json({ audio_formats, video_formats,meta });
-    // } catch (error) {
-    //     console.error('Error:', error, "Message", error?.message);
-    //     res.status(500).json({ error: `Failed to fetch video information ${error?.message}` });
-    // }
+    } catch (error) {
+        console.error('Error:', error, "Message", error?.message);
+        res.status(500).json({ error: `Failed to fetch video information ${error?.message}` });
+    }
 });
 
 // app.get('/',(req,res)=>{
