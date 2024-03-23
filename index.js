@@ -139,7 +139,8 @@ app.post('/info', async (req, res) => {
     try {
         // const info = await ytdl.getInfo(url);
         // const info = await ytdl.getInfo(url);
-        console.log('ytdl', ytdl.getInfo(url))
+        // console.log('ytdl', ytdl.getInfo(url))
+        // console.log('ytdl', ytdl.getInfo(url))
         // console.log('infoo',info);
         // const formatsWithAudio = info.formats.filter(format => format.hasAudio && format.hasVideo);
 
