@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  title: YouTube Downloader API
+  version: 1.0.0
+  description: |
+    This API allows users to download and retrieve information about YouTube videos.
+
+paths:
+  /download:
+    post:
+      summary: Download a YouTube video
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                resolution:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /info:
+    post:
+      summary: Get information about a YouTube video
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  audio_formats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Format'
+                  video_formats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Format'
+                  meta:
+                    $ref: '#/components/schemas/VideoMeta'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+components:
+  schemas:
+    Format:
+      type: object
+      properties:
+        itag:
+          type: string
+        resolution:
+          type: string
+    VideoMeta:
+      type: object
+      properties:
+        title:
+          type: string
+        author:
+          type: string
+        keywords:
+          type: array
+          items:
+            type: string
