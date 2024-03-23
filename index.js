@@ -96,39 +96,39 @@ const pipelineAsync = promisify(pipeline);
 app.use(bodyParser.json());
 app.use(cors());
 
-app.post('/download', async (req, res) => {
-    const { url, resolution } = req.body;
-    if (!ytdl.validateURL(url)) {
-        return res.status(400).json({ error: 'Invalid YouTube URL' });
-    }
+// app.post('/download', async (req, res) => {
+//     const { url, resolution } = req.body;
+//     if (!ytdl.validateURL(url)) {
+//         return res.status(400).json({ error: 'Invalid YouTube URL' });
+//     }
 
-    // try {
-        const info = await ytdl.getInfo(url);
-        console.log('info', info);
+//     // try {
+//         const info = await ytdl.getInfo(url);
+//         console.log('info', info);
 
-        const quality = resolution;
+//         const quality = resolution;
 
-        console.log('ytdl', ytdl)
+//         console.log('ytdl', ytdl)
 
-        // Find the format with the requested resolution
-        const format = ytdl.chooseFormat(info.formats, { quality });
-        if (!format) {
-            return res.status(400).json({ error: 'Requested resolution not available for this video' });
-        }
+//         // Find the format with the requested resolution
+//         const format = ytdl.chooseFormat(info.formats, { quality });
+//         if (!format) {
+//             return res.status(400).json({ error: 'Requested resolution not available for this video' });
+//         }
 
-        res.setHeader('Content-Disposition', `attachment; filename="${info.videoDetails.title}.mp4"`);
+//         res.setHeader('Content-Disposition', `attachment; filename="${info.videoDetails.title}.mp4"`);
 
-        // Stream the video directly to the response stream
-        await pipelineAsync(
-            ytdl(url, { quality: format.itag }),
-            res
-        );
+//         // Stream the video directly to the response stream
+//         await pipelineAsync(
+//             ytdl(url, { quality: format.itag }),
+//             res
+//         );
 
-    // } catch (error) {
-    //     console.error('Error:', error);
-    //     res.status(500).json({ error: 'Failed to download video' });
-    // }
-});
+//     // } catch (error) {
+//     //     console.error('Error:', error);
+//     //     res.status(500).json({ error: 'Failed to download video' });
+//     // }
+// });
 
 app.post('/info', async (req, res) => {
     const { url } = req.body;
@@ -136,7 +136,7 @@ app.post('/info', async (req, res) => {
         return res.status(400).json({ error: 'Invalid YouTube URL' });
     }
 
-    try {
+    // try {
         const info = await ytdl.getInfo(url);
         console.log('infoo',info);
         const formatsWithAudio = info.formats.filter(format => format.hasAudio && format.hasVideo);
@@ -150,10 +150,10 @@ app.post('/info', async (req, res) => {
         const meta = info.videoDetails
 
         res.json({ audio_formats, video_formats,meta });
-    } catch (error) {
-        console.error('Error:', error, "Message", error?.message);
-        res.status(500).json({ error: `Failed to fetch video information ${error?.message}` });
-    }
+    // } catch (error) {
+    //     console.error('Error:', error, "Message", error?.message);
+    //     res.status(500).json({ error: `Failed to fetch video information ${error?.message}` });
+    // }
 });
 
 // app.get('/',(req,res)=>{
