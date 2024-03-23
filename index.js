@@ -137,19 +137,22 @@ app.post('/info', async (req, res) => {
     }
 
     try {
-        const info = await ytdl.getInfo(url);
-        console.log('infoo',info);
-        const formatsWithAudio = info.formats.filter(format => format.hasAudio && format.hasVideo);
+        // const info = await ytdl.getInfo(url);
+        // const info = await ytdl.getInfo(url);
+        console.log('ytdl', ytdl.getInfo(url))
+        // console.log('infoo',info);
+        // const formatsWithAudio = info.formats.filter(format => format.hasAudio && format.hasVideo);
 
-        const selectedFormat = formatsWithAudio.find(format => format.resolution === '2160p' || format.resolution === '4320p');
-        console.log('formatsWithAudio', formatsWithAudio);
+        // const selectedFormat = formatsWithAudio.find(format => format.resolution === '2160p' || format.resolution === '4320p');
+        // console.log('formatsWithAudio', formatsWithAudio);
 
-        const audio_formats = ytdl.filterFormats(info.formats, 'audioonly');
-        const video_formats = ytdl.filterFormats(info.formats, 'video');
+        // const audio_formats = ytdl.filterFormats(info.formats, 'audioonly');
+        // const video_formats = ytdl.filterFormats(info.formats, 'video');
 
-        const meta = info.videoDetails
+        // const meta = info.videoDetails
 
-        res.json({ audio_formats, video_formats,meta });
+        // res.json({ audio_formats, video_formats,meta });
+        res.json({ data:'success' });
     } catch (error) {
         console.error('Error:', error, "Message", error?.message);
         res.status(500).json({ error: `Failed to fetch video information ${error?.message}` });
