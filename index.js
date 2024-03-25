@@ -129,8 +129,22 @@ app.use(cors());
 //     //     res.status(500).json({ error: 'Failed to download video' });
 //     // }
 // });
+const frontendDomain = 'https://www.fast4k.com'
+function authenticateReferer(req, res, next) {
+    const referer = req.headers.origin ||'';
+    // const referer = '';
+    console.log('refer', req.headers.origin);
 
-app.post('/info', async (req, res) => {
+    if (!referer || !referer.startsWith(frontendDomain)) {
+        return res.status(403).json({ message: 'Forbidden: Access denied' });
+    }
+
+    // Referer header matches the frontend domain, continue to the next middleware
+    next();
+}
+
+
+app.post('/info/info', authenticateReferer, async (req, res) => {
     const { url } = req.body;
     if (!ytdl.validateURL(url)) {
         return res.status(400).json({ error: 'Invalid YouTube URL' });
