@@ -144,7 +144,7 @@ function authenticateReferer(req, res, next) {
 }
 
 
-app.post('/info/info', authenticateReferer, async (req, res) => {
+app.post('/info', authenticateReferer, async (req, res) => {
     const { url } = req.body;
     if (!ytdl.validateURL(url)) {
         return res.status(400).json({ error: 'Invalid YouTube URL' });
