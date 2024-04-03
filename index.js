@@ -89,7 +89,9 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
+import dotenv from 'dotenv'
 
+dotenv.config()
 const app = express();
 const pipelineAsync = promisify(pipeline);
 
@@ -129,7 +131,8 @@ app.use(cors());
 //     //     res.status(500).json({ error: 'Failed to download video' });
 //     // }
 // });
-const frontendDomain = 'https://www.fast4k.com'
+const frontendDomain = process.env.ACCESS_DOMAIN_URL || 'https://www.fast4k.com'
+console.log('frontendDomain', frontendDomain)
 function authenticateReferer(req, res, next) {
     const referer = req.headers.origin ||'';
     // const referer = '';
