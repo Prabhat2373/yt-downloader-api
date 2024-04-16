@@ -199,7 +199,8 @@ app.get('/merge', async (req, res) => {
         const selectedFormat = chooseVideoFormat(videoFormats, desiredQuality);
 
 
-        res.header('Content-Disposition', `attachment; filename=${videoInfo?.videoDetails?.title}.mp4`);
+        // res.header('Content-Disposition', `attachment; filename=${videoInfo?.videoDetails?.title}.mp4`);
+        res.header('Content-Disposition', `attachment; filename=fast4k_video.mp4`);
 
         const video = ytdl(url, { quality:selectedFormat.itag });
         const audio = ytdl(url, { filter: 'audioonly', highWaterMark: 1 << 25 });
