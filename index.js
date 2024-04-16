@@ -91,6 +91,8 @@ import { pipeline } from 'stream';
 import { promisify } from 'util';
 import dotenv from 'dotenv'
 
+import cp from 'child_process';
+import ffmpegPath from 'ffmpeg-static';
 dotenv.config()
 const app = express();
 const pipelineAsync = promisify(pipeline);
@@ -172,6 +174,78 @@ app.post('/info', authenticateReferer, async (req, res) => {
     //     res.status(500).json({ error: `Failed to fetch video information ${error?.message}` });
     // }
 });
+
+
+
+app.get('/merge', async (req, res) => {
+    const { url,format:desiredQuality } = req.query;
+
+    function chooseVideoFormat(formats, desiredQuality) {
+        return formats.find(format => {
+          return format.qualityLabel && format.qualityLabel.includes(desiredQuality);
+        });
+      }
+      
+
+    try {
+        if (!url || !ytdl.validateURL(url)) {
+            throw new Error('Invalid YouTube URL');
+        }
+
+        const videoInfo = await ytdl.getInfo(url)
+        console.log('videoInfo', videoInfo)
+        const videoFormats = videoInfo.formats; // Filter only video formats
+
+        // Choose the desired video format based on quality label from query parameter
+        const selectedFormat = chooseVideoFormat(videoFormats, desiredQuality);
+        console.log('selectedFormat', selectedFormat)
+
+
+        res.header('Content-Disposition', `attachment; filename=${videoInfo?.videoDetails?.title}.mp4`);
+
+        const video = ytdl(url, { quality:selectedFormat.itag });
+        const audio = ytdl(url, { filter: 'audioonly', highWaterMark: 1 << 25 });
+
+        const ffmpegProcess = cp.spawn(ffmpegPath, [
+            '-i', 'pipe:3',
+            '-i', 'pipe:4',
+            '-map', '0:v',
+            '-map', '1:a',
+            '-c:v', 'copy',
+            '-c:a', 'libmp3lame',
+            '-crf', '27',
+            '-preset', 'veryfast',
+            '-movflags', 'frag_keyframe+empty_moov',
+            '-f', 'mp4',
+            '-loglevel', 'error',
+            '-'
+        ], {
+            stdio: ['pipe', 'pipe', 'pipe', 'pipe', 'pipe']
+        });
+
+        video.pipe(ffmpegProcess.stdio[3]);
+        audio.pipe(ffmpegProcess.stdio[4]);
+        ffmpegProcess.stdio[1].pipe(res);
+
+        let ffmpegLogs = '';
+
+        ffmpegProcess.stdio[2].on('data', (chunk) => {
+            ffmpegLogs += chunk.toString();
+        });
+
+        ffmpegProcess.on('exit', (exitCode) => {
+            if (exitCode !== 0) {
+                console.error('FFmpeg process exited with code', exitCode);
+                console.error(ffmpegLogs);
+            }
+        });
+
+    } catch (error) {
+        console.error('Merge operation failed:', error);
+        res.status(500).send('Merge operation failed');
+    }
+});
+
 
 // app.get('/',(req,res)=>{
 //   res.setHeader('Content-Type', 'text/html');
