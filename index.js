@@ -161,7 +161,7 @@ app.post('/info', authenticateReferer, async (req, res) => {
         const formatsWithAudio = info.formats.filter(format => format.hasAudio && format.hasVideo);
 
         const selectedFormat = formatsWithAudio.find(format => format.resolution === '2160p' || format.resolution === '4320p');
-        console.log('formatsWithAudio', formatsWithAudio);
+        // console.log('formatsWithAudio', formatsWithAudio);
 
         const audio_formats = ytdl.filterFormats(info.formats, 'audioonly');
         const video_formats = ytdl.filterFormats(info.formats, 'video');
@@ -193,12 +193,10 @@ app.get('/merge', async (req, res) => {
         }
 
         const videoInfo = await ytdl.getInfo(url)
-        console.log('videoInfo', videoInfo)
         const videoFormats = videoInfo.formats; // Filter only video formats
 
         // Choose the desired video format based on quality label from query parameter
         const selectedFormat = chooseVideoFormat(videoFormats, desiredQuality);
-        console.log('selectedFormat', selectedFormat)
 
 
         res.header('Content-Disposition', `attachment; filename=${videoInfo?.videoDetails?.title}.mp4`);
@@ -235,13 +233,13 @@ app.get('/merge', async (req, res) => {
 
         ffmpegProcess.on('exit', (exitCode) => {
             if (exitCode !== 0) {
-                console.error('FFmpeg process exited with code', exitCode);
+                console.log('FFmpeg process exited with code', exitCode);
                 console.error(ffmpegLogs);
             }
         });
 
     } catch (error) {
-        console.error('Merge operation failed:', error);
+        console.log('Merge operation failed:', error);
         res.status(500).send('Merge operation failed');
     }
 });
