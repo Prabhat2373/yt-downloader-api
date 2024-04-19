@@ -180,6 +180,11 @@ app.post('/info', authenticateReferer, async (req, res) => {
 app.get('/merge', async (req, res) => {
     const { url,format:desiredQuality } = req.query;
 
+    const sanitizeFilename = (filename) => {
+        // Replace characters that are not allowed in HTTP headers
+        return filename.replace(/[^\w\d-_.]/g, '_'); // Replace invalid characters with underscores
+    };
+
     function chooseVideoFormat(formats, desiredQuality) {
         return formats.find(format => {
           return format.qualityLabel && format.qualityLabel.includes(desiredQuality);
@@ -201,8 +206,8 @@ app.get('/merge', async (req, res) => {
 
         // res.header('Content-Disposition', `attachment; filename=${videoInfo?.videoDetails?.title}.mp4`);
         if(selectedFormat && videoInfo.videoDetails.title){
-            
-            res.header('Content-Disposition', `attachment; filename=${videoInfo.videoDetails.title}.mp4`);
+            const safeFilename = sanitizeFilename(videoInfo.videoDetails.title);
+            res.header('Content-Disposition', `attachment; filename=${safeFilename}.mp4`);
             const video = ytdl(url, { quality:selectedFormat.itag });
         const audio = ytdl(url, { filter: 'audioonly', highWaterMark: 1 << 25 });
 
