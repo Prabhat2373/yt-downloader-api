@@ -138,7 +138,7 @@ console.log('frontendDomain', frontendDomain)
 function authenticateReferer(req, res, next) {
     const referer = req.headers.origin ||'';
     // const referer = '';
-    console.log('refer', req.headers.origin);
+    // console.log('refer', req.headers.origin);
 
     if (!referer || !referer.startsWith(frontendDomain)) {
         return res.status(403).json({ message: 'Forbidden: Access denied' });
@@ -157,7 +157,7 @@ app.post('/info', authenticateReferer, async (req, res) => {
 
     // try {
         const info = await ytdl.getInfo(url);
-        console.log('infoo',info);
+        // console.log('infoo',info);
         const formatsWithAudio = info.formats.filter(format => format.hasAudio && format.hasVideo);
 
         const selectedFormat = formatsWithAudio.find(format => format.resolution === '2160p' || format.resolution === '4320p');
@@ -200,13 +200,10 @@ app.get('/merge', async (req, res) => {
 
 
         // res.header('Content-Disposition', `attachment; filename=${videoInfo?.videoDetails?.title}.mp4`);
-        // if(selectedFormat){
+        if(selectedFormat){
             
-        //     // res.header('Content-Disposition', `attachment; filename=${videoInfo?.videoDetails?.title}.mp4`);
-        // }
-        res.header('Content-Disposition', `attachment; filename=fast4k_video.mp4`);
-
-        const video = ytdl(url, { quality:selectedFormat.itag });
+            res.header('Content-Disposition', `attachment; filename=${videoInfo?.videoDetails?.title}.mp4`);
+            const video = ytdl(url, { quality:selectedFormat.itag });
         const audio = ytdl(url, { filter: 'audioonly', highWaterMark: 1 << 25 });
 
         const ffmpegProcess = cp.spawn(ffmpegPath, [
@@ -239,10 +236,14 @@ app.get('/merge', async (req, res) => {
         ffmpegProcess.on('exit', (exitCode) => {
             if (exitCode !== 0) {
                 console.log('FFmpeg process exited with code', exitCode);
-                console.error(ffmpegLogs);
+                // console.error(ffmpegLogs);
             }
         });
+    console.log('downloading...')
+        }
+        // res.header('Content-Disposition', `attachment; filename=fast4k_video.mp4`);
 
+        
     } catch (error) {
         console.log('Merge operation failed:', error);
         res.status(500).send('Merge operation failed');
