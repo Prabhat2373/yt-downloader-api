@@ -166,6 +166,7 @@ app.get("/merge", async (req, res) => {
 
 // API endpoint for submitting contact form
 app.post('/contact', (req, res) => {
+  console.log('body', req.body)
   const { name, email, subject, message } = req.body;
 
   // Validate data (optional)
@@ -203,7 +204,7 @@ app.post('/contact', (req, res) => {
       return res.status(500).json({ error: 'Failed to send email.' });
     }
     console.log('Email sent:', info.response);
-    res.status(200).json({ message: 'Email sent successfully.' });
+    res.status(200).json({ success:true, message: 'Email sent successfully.' });
   });
 
 
@@ -213,7 +214,7 @@ app.post('/contact', (req, res) => {
       return res.status(500).json({ error: 'Failed to send email.' });
     }
     console.log('Email sent:', info.response);
-    res.status(200).json({ message: 'Email sent successfully.' });
+    res.status(200).json({success:true, message: 'Email sent successfully.' });
   });
 });
 
