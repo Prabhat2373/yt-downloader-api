@@ -24,9 +24,9 @@ function authenticateReferer(req, res, next) {
   // const referer = '';
   // console.log('refer', req.headers.origin);
 
-  if (!referer || !referer.startsWith(frontendDomain)) {
-    return res.status(403).json({ message: "Forbidden: Access denied" });
-  }
+  // if (!referer || !referer.startsWith(frontendDomain)) {
+  //   return res.status(403).json({ message: "Forbidden: Access denied" });
+  // }
 
   // Referer header matches the frontend domain, continue to the next middleware
   next();
