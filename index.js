@@ -1,5 +1,5 @@
 import express from "express";
-import ytdl from "ytdl-core";
+import ytdl from "@distube/ytdl-core";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { pipeline } from "stream";
